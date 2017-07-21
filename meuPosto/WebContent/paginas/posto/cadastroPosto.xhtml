@@ -261,15 +261,17 @@
 						style="font-size:20px;font-family:Charbroil;margin-right:22px;" />
 
 					<p:password value="#{meuPostoBean.posto.senha}"
-						styleClass="inputPrancheta" id="inptSenha"
-						size="10"  required="true" 	requiredMessage="Campo Obrigatório: Senha!"
+						styleClass="inputPrancheta" id="inptSenha" size="10"
+						required="true" requiredMessage="Campo Obrigatório: Senha!"
 						style="font-size:15px; color:gray;margin-right:18px" />
 
 					<p:outputLabel value="CONFIRME SENHA:" for="inptSenhaConf"
 						style="font-size:20px;font-family:Charbroil;margin-right:20px;" />
 
-					<p:password value="#{meuPostoBean.confirmSenha}" size="10" required="true" id="inptSenhaConf"
-						styleClass="inputPrancheta" requiredMessage="Campo Obrigatório: Confirmação de Senha!" style="font-size:15px; color:gray;" />
+					<p:password value="#{meuPostoBean.confirmSenha}" size="10"
+						required="true" id="inptSenhaConf" styleClass="inputPrancheta"
+						requiredMessage="Campo Obrigatório: Confirmação de Senha!"
+						style="font-size:15px; color:gray;" />
 
 				</h:panelGroup>
 				<br />
@@ -280,11 +282,12 @@
 				<h:panelGroup layout="block"
 					style="float:center;position:relative;top:150px;">
 					<p:commandButton value="Salvar" update="formCad" id="btnCad"
-						styleClass="btnMeuPosto" action="#{meuPostoBean.salvarPosto}"
+						styleClass="btnMeuPosto"
+						actionListener="#{meuPostoBean.salvarPosto}"
 						style="text-align: center !important; padding: inherit !important;">
 					</p:commandButton>
 
-					<p:commandButton value="" id="btnDefault"
+					<p:commandButton value="teste" id="btnDefault" 
 						style="visibility:hidden !important;">
 					</p:commandButton>
 				</h:panelGroup>
@@ -296,13 +299,32 @@
 
 	</h:form>
 
+	<p:dialog widgetVar="dlgSalvo" id="dlgSalvo1" showEffect="fade"
+		resizable="false" closable="false" styleClass="dialogBox"
+		header="Posto Salvo com Sucesso">
+		<h:form prependId="false">
+			<div align="center">
+				<p:outputLabel
+					value="Ao clicar no botão abaixo você será direcionado para a sua tela inicial."
+					style="color: blue; font-size:12px; font-weight:700;"></p:outputLabel>
+				<br />
+				<p:spacer height="45" width="0"></p:spacer>
+				<p:commandButton value="OK"
+					style="margin-right:10px;font-size: 15px !important; 
+						text-align: center !important;	height: 30px !important;
+						width: 80px !important;"
+					action="#{meuPostoBean.navegarHome}" styleClass="btnMeuPosto" />
+			</div>
+		</h:form>
+	</p:dialog>
+
 
 	<p:dialog header="Marcar localização" widgetVar="dlMap" id="dlMap1"
 		modal="true" dynamic="true" width="600" resizable="false"
-		closable="false">
+		closable="false" styleClass="dialogBox">
 		<h:form id="formMapa" prependId="false">
 			<div align="center">
-				<p:outputLabel value="Marque no mapa o local do estabelecimento."
+				<p:outputLabel value="Clique no mapa o local do estabelecimento."
 					style="color:red;font-size:15px"></p:outputLabel>
 			</div>
 			<br />
@@ -317,14 +339,22 @@
 		</h:form>
 	</p:dialog>
 
-	<p:dialog widgetVar="dlg" showEffect="fade" closable="false">
+	<p:dialog widgetVar="dlg" showEffect="fade" resizable="false"
+		closable="false" styleClass="dialogConfirma">
 		<h:form prependId="false">
 			<h:panelGrid columns="2">
 				<f:facet name="footer">
 					<p:commandButton value="Confirmar"
+						style="margin-right:10px;font-size: 15px !important; 
+						text-align: center !important;	height: 30px !important;
+						width: 80px !important;"
 						actionListener="#{meuPostoBean.addMarker}" update="dlMap1"
-						oncomplete="markerAddComplete()" />
-					<p:commandButton value="Cancelar" onclick="return cancel()" />
+						oncomplete="markerAddComplete()" styleClass="btnMeuPosto" />
+					<p:commandButton value="Cancelar" styleClass="btnMeuPostoExcluir"
+						onclick="return cancel()"
+						style="font-size: 15px !important; 
+							text-align: center !important;	height: 30px !important;
+						width: 80px !important;" />
 				</f:facet>
 			</h:panelGrid>
 			<h:inputHidden id="lat" value="#{meuPostoBean.latEstabelecimento}" />

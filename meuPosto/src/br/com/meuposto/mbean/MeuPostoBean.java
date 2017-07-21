@@ -84,21 +84,25 @@ public class MeuPostoBean extends SimpleController{
 		}
 	}
 	
+	public String navegarHome(){
+		return "home.proj?faces-redirect=true";
+	}
+	
 	public void addMarker() {
         Marker marker = new Marker(new org.primefaces.model.map.LatLng(latEstabelecimento, lngEstabelecimento), "Meu Posto");
         mapModel.getMarkers().clear();
         mapModel.addOverlay(marker);
     }
 	
-	public String salvarPosto(){
+	public void salvarPosto(){
 		if(posto.getEstado() == null || posto.getEstado().isEmpty()){
 			MsgUtil.updateMessage(FacesMessage.SEVERITY_ERROR, "Favor validar CEP!");
-			return ""; 
+			
 		}
 		
 		if(!posto.getSenha().equals(confirmSenha)){
 			MsgUtil.updateMessage(FacesMessage.SEVERITY_ERROR, "Confirmação de senha diferente da senha!");
-			return ""; 
+			 
 		}
 		
 		try {
@@ -106,11 +110,12 @@ public class MeuPostoBean extends SimpleController{
 			posto.setLongitude(lngEstabelecimento);
 			PostoBO.getInstance().salvarPosto(posto);
 			MsgUtil.updateMessage(FacesMessage.SEVERITY_INFO, "Posto cadastrado com sucesso.!");
-			return "home.proj?faces-redirect=true";
+			RequestContext context = RequestContext.getCurrentInstance();
+			context.execute("PF('dlgSalvo').show();");
+			
 		} catch (ExcecaoNegocio e) {
 			ExcecoesUtil.TratarExcecao(e);
 		}
-		return "";
 	}
 	
 	public void validarCep() {

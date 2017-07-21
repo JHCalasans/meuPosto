@@ -37,6 +37,26 @@ form span.p_like input, form span.p_like select, form span.p_like img,
 }
 
 
+.dialogBox {
+	background: bisque !important;
+}
+
+.dialogBox .ui-dialog-titlebar {
+	background: #A16838 !important;
+	color: white !important;
+}
+
+
+.dialogConfirma {
+	background: bisque !important;
+	border: chocolate !important;
+}
+
+.dialogConfirma .ui-dialog-titlebar {
+	visibility: hidden !important;
+	padding: inherit !important;
+}
+
 
 .selectDistribuidora .ui-state-default{
 	background: #A16838 !important;
