@@ -16,5 +16,7 @@ public interface IPostoDAO extends GenericDAO<Posto, Integer> {
 	public List<Posto> obterporDistancia(double latitude, double longitude,EntityManager em) throws ExcecaoBanco;
 	
 	public List<Posto> obterporCNPJ(String cnpj,EntityManager em) throws ExcecaoBanco;
+	
+	public List<Posto> obterporCNPJESenha(String cnpj, String senha,EntityManager em) throws ExcecaoBanco;
 
 }

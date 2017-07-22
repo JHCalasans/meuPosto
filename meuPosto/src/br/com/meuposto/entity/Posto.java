@@ -24,6 +24,7 @@ import br.com.minhaLib.dao.Entidade;
 		@NamedQuery(name = "Posto.obterPorDistancia", query = "select p from Posto p"
 		+ " where p.latitude >= (:latitude - 0.2) and p.latitude <= (:latitude + 0.2) and p.longitude >= (:longitude - 0.2)  and p.longitude <= (:longitude + 0.2)"),
 		@NamedQuery(name = "Posto.obterPorCNPJ", query = "select p from Posto p where p.cnpj like :cnpj"),
+		@NamedQuery(name = "Posto.obterPorCNPJESenha", query = "select p from Posto p where p.cnpj like :cnpj and senha like :senha")
 		})
 public class Posto extends Entidade {
 

@@ -56,8 +56,6 @@ public class MeuPostoBean extends SimpleController{
 	
 	private Distribuidora distribuidora;
 	
-	private StreamedContent imgStream;
-	
 	private MapModel mapModel;
 	
 	private LatLng coordenadas;
@@ -69,15 +67,18 @@ public class MeuPostoBean extends SimpleController{
 	@PostConstruct
 	public void carregar() {
 		try {
-			mapModel = new DefaultMapModel();
-			coordenadas = new LatLng(-10.9536484,-37.0437752);
-			if(posto == null)
+			
+			if(getPostoLogado() != null)
+				posto = getPostoLogado();
+			
+			if(posto == null){
 				posto = new Posto();
+				mapModel = new DefaultMapModel();
+				coordenadas = new LatLng(-10.9536484,-37.0437752);
+			}
 			setListaDistribuidoras(DistribuidoraBO.getInstance().obterAtivas());
 			
-			imgStream = new DefaultStreamedContent(
-					new ByteArrayInputStream(listaDistribuidoras.get(0).getLogo()),
-					"image/*");
+			
 
 		} catch (Exception e) {
 			ExcecoesUtil.TratarExcecao(e);
@@ -85,6 +86,7 @@ public class MeuPostoBean extends SimpleController{
 	}
 	
 	public String navegarHome(){
+		getSessionMap().put("meuPosto.posto", posto);	
 		return "home.proj?faces-redirect=true";
 	}
 	
@@ -108,7 +110,7 @@ public class MeuPostoBean extends SimpleController{
 		try {
 			posto.setLatitude(latEstabelecimento);
 			posto.setLongitude(lngEstabelecimento);
-			PostoBO.getInstance().salvarPosto(posto);
+			posto = PostoBO.getInstance().salvarPosto(posto);
 			MsgUtil.updateMessage(FacesMessage.SEVERITY_INFO, "Posto cadastrado com sucesso.!");
 			RequestContext context = RequestContext.getCurrentInstance();
 			context.execute("PF('dlgSalvo').show();");
@@ -330,14 +332,6 @@ public class MeuPostoBean extends SimpleController{
 
 	public void setDistribuidora(Distribuidora distribuidora) {
 		this.distribuidora = distribuidora;
-	}
-
-	public StreamedContent getImgStream() {
-		return imgStream;
-	}
-
-	public void setImgStream(StreamedContent imgStream) {
-		this.imgStream = imgStream;
 	}
 
 	public MapModel getMapModel() {

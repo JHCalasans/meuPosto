@@ -31,10 +31,14 @@
 		<link rel="shortcut icon" type="image/x-icon"
 			href="#{request.contextPath}/resources/favico.ico" />
 	</f:facet>
+	<h:outputScript library="js" name="somenteNumeros.js" />
 
 </h:head>
 <h:body style="background:bisque;">
-
+	<f:metadata>
+		<f:event type="preRenderView"
+			listener="#{meuPostoBean.verificaSessaoValida}" />
+	</f:metadata>
 	<p:ajaxStatus>
 		<f:facet name="start">
 			<h:panelGroup>
@@ -65,16 +69,192 @@
 	<p:growl id="growl" autoUpdate="true" closable="true"></p:growl>
 	<h:form id="formCad">
 
-		<h:panelGroup layout="block" style="text-align:center;">
-			<p:outputLabel value="Aplicativo meu Posto"
-				style="text-align:center;font-family:Charbroil;font-weight:700;font-size:62px"></p:outputLabel>
+		<h:panelGroup layout="block" style="margin-top:-15px;">
 			<h:graphicImage value="/resources/gota-circulo.png" height="100px"
 				style="position:relative;top:35px;" />
+			<p:outputLabel value="Aplicativo meu Posto"
+				style="text-align:center;font-family:Charbroil;font-weight:700;font-size:42px;"></p:outputLabel>
+
 
 		</h:panelGroup>
 		<br />
+		<p:spacer height="15" width="0" />
 
-	
+
+		<h:panelGroup layout="block" style="text-align:center;">
+			<p:outputLabel value="Bem vindo"
+				style="text-align:center;font-family:Charbroil;font-weight:700;font-size:42px"></p:outputLabel>
+
+		</h:panelGroup>
+		<br />
+		<div align="center">
+			<p:panel
+				style="width:600px;height:700px;border-color:brown;border-width:3px; border-radius:10px;">
+				<h:panelGroup layout="block">
+					<p:outputLabel value="DADOS DO POSTO"
+						style="font-size:30px;font-family:Charbroil;" />
+
+
+				</h:panelGroup>
+				<br />
+				<div class="clear"></div>
+
+				<h:panelGroup layout="block" style="float:left;margin-top:20px;">
+					<p:outputLabel value="Posto :" for="nmPosto"
+						style=" font-size:25px;font-family:Charbroil; margin-right: 20px" />
+					<p:outputLabel value="#{meuPostoBean.postoLogado.nome}"
+						id="nmPosto" style="font-size:18px; color:gray;">
+
+					</p:outputLabel>
+				</h:panelGroup>
+				<br />
+				<div class="clear"></div>
+
+
+				<h:panelGroup layout="block" style="float:left;margin-top:20px;">
+					<p:outputLabel value="CNPJ :"
+						style=" font-size:25px;font-family:Charbroil; margin-right: 20px;margin-left:17px;" />
+					<p:outputLabel value="#{meuPostoBean.postoLogado.cnpj}"
+						style="font-size:18px; color:gray;">
+
+					</p:outputLabel>
+				</h:panelGroup>
+				<br />
+				<div class="clear"></div>
+
+
+				<h:panelGroup layout="block" style="float:left;margin-top:20px;">
+					<p:outputLabel value="CEP :"
+						style=" font-size:25px;font-family:Charbroil; margin-right: 20px;margin-left:26px;" />
+					<p:outputLabel value="#{meuPostoBean.postoLogado.cep}"
+						style="font-size:18px; color:gray;">
+
+					</p:outputLabel>
+				</h:panelGroup>
+				<br />
+				<div class="clear"></div>
+				<hr style="border: 1px dashed black;" />
+				<br />
+				<div class="clear"></div>
+
+				<h:panelGroup layout="block">
+					<p:outputLabel value="PREÇOS"
+						style="font-size:30px;font-family:Charbroil;" />
+				</h:panelGroup>
+				<br />
+				<div class="clear"></div>
+
+				<h:panelGroup layout="block" id="pngGasolinaComum"
+					style="float:left;margin-top:20px;margin-left:18px;">
+
+					<p:outputLabel value="GASOLINA COMUM :"
+						style="font-size:25px;font-family:Charbroil;margin-right:25px;" />
+					<p:outputLabel value="R$ " style="font-size:20px;" />
+
+					<p:inputMask id="gasolinaComum" style="font-size:20px;color: gray;"
+						value="#{meuPostoBean.postoLogado.gasolinaComum}" mask="9,99"
+						styleClass="inputPrancheta" size="4">
+
+					</p:inputMask>
+					<p:commandButton value="Salvar" process="gasolinaComum"
+						styleClass="btnMeuPosto"
+						style="margin-left:15px;text-align: center !important; padding: inherit !important;"></p:commandButton>
+
+				</h:panelGroup>
+
+				<br />
+				<div class="clear"></div>
+
+				<h:panelGroup layout="block" id="pngGasolinaAd"
+					style="float:left;margin-top:20px;">
+
+					<p:outputLabel value="GASOLINA ADITIVADA :"
+						style="font-size:25px;font-family:Charbroil;margin-right:25px;" />
+					<p:outputLabel value="R$ " style="font-size:20px;" />
+
+					<p:inputMask id="gasolinaAditivada"
+						style="font-size:20px;color: gray;"
+						value="#{meuPostoBean.postoLogado.gasolinaAditivada}" mask="9,99"
+						styleClass="inputPrancheta" size="4">
+
+					</p:inputMask>
+					<p:commandButton value="Salvar" process="gasolinaAditivada"
+						styleClass="btnMeuPosto"
+						style="margin-left:15px;text-align: center !important; padding: inherit !important;"></p:commandButton>
+
+				</h:panelGroup>
+
+				<br />
+				<div class="clear"></div>
+
+				<h:panelGroup layout="block" id="pngEtanol"
+					style="float:left;margin-top:20px;margin-left:115px;">
+
+					<p:outputLabel value="ETANOL :"
+						style="font-size:25px;font-family:Charbroil;margin-right:25px;" />
+					<p:outputLabel value="R$ " style="font-size:20px;" />
+
+					<p:inputMask id="etanol"
+						style="font-size:20px;color: gray;"
+						value="#{meuPostoBean.postoLogado.alcool}" mask="9,99"
+						styleClass="inputPrancheta" size="4">
+
+					</p:inputMask>
+					<p:commandButton value="Salvar" process="etanol"
+						styleClass="btnMeuPosto"
+						style="margin-left:15px;text-align: center !important; padding: inherit !important;"></p:commandButton>
+
+				</h:panelGroup>
+				
+				<br />
+				<div class="clear"></div>
+
+				<h:panelGroup layout="block" id="pngDiesel"
+					style="float:left;margin-top:20px;margin-left:124px;">
+
+					<p:outputLabel value="DIESEL :"
+						style="font-size:25px;font-family:Charbroil;margin-right:25px;" />
+					<p:outputLabel value="R$ " style="font-size:20px;" />
+
+					<p:inputMask id="diesel"
+						style="font-size:20px;color: gray;"
+						value="#{meuPostoBean.postoLogado.diesel}" mask="9,99"
+						styleClass="inputPrancheta" size="4">
+
+					</p:inputMask>
+					<p:commandButton value="Salvar" process="diesel"
+						styleClass="btnMeuPosto"
+						style="margin-left:15px;text-align: center !important; padding: inherit !important;"></p:commandButton>
+
+				</h:panelGroup>
+				
+				<br />
+				<div class="clear"></div>
+
+				<h:panelGroup layout="block" id="pngGNV"
+					style="float:left;margin-top:20px;margin-left:143px;">
+
+					<p:outputLabel value="GNV :"
+						style="font-size:25px;font-family:Charbroil;margin-right:25px;" />
+					<p:outputLabel value="R$ " style="font-size:20px;" />
+
+					<p:inputMask id="gnv"
+						style="font-size:20px;color: gray;"
+						value="#{meuPostoBean.postoLogado.gnv}" mask="9,99"
+						styleClass="inputPrancheta" size="4">
+
+					</p:inputMask>
+					<p:commandButton value="Salvar" process="gnv"
+						styleClass="btnMeuPosto"
+						style="margin-left:15px;text-align: center !important; padding: inherit !important;"></p:commandButton>
+
+				</h:panelGroup>
+
+			</p:panel>
+
+		</div>
+
+
 
 	</h:form>
 

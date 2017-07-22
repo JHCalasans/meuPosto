@@ -38,8 +38,33 @@ public class PostoBO extends MeuPostoBO {
 			return result;
 		} catch (ExcecaoBanco e) {
 			emUtil.rollbackTransaction(transaction);
-			throw new ExcecaoNegocio("Falha ao tentar obter posto pela dist�ncia.", e);
+			throw new ExcecaoNegocio("Falha ao tentar obter posto pela distância.", e);
 		} finally {
+			emUtil.closeEntityManager(em);
+		}
+	}
+	
+	public Posto obterPostoPorCNPJESenha(String cnpj, String senha) throws ExcecaoNegocio {
+		EntityManager em = emUtil.getEntityManager();
+		EntityTransaction transaction = em.getTransaction();
+		Posto result = null;
+		try {
+			transaction.begin();
+			IPostoDAO postoDAO = fabricaDAO.getPostgresPostoDAO();
+
+			List<Posto> lista = postoDAO.obterporCNPJESenha(cnpj, FuncoesUtil.criptografarSenha(senha), em);
+			if (lista != null && lista.size() > 0)
+				result = lista.get(0);
+
+			emUtil.commitTransaction(transaction);
+			return result;
+		} catch (ExcecaoBanco e) {
+			emUtil.rollbackTransaction(transaction);
+			throw new ExcecaoNegocio("Falha ao tentar obter posto pelo CNPJ.", e);
+		} catch (Exception e) {
+			emUtil.rollbackTransaction(transaction);
+			throw new ExcecaoNegocio("Falha ao tentar criptografar senha.", e);
+		}		finally {
 			emUtil.closeEntityManager(em);
 		}
 	}

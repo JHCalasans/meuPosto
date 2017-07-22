@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ido="http://www.ido.com.br/jsf/components">
+<h:head>
+	<f:facet name="first">
+		<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE10" />
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>Login Projeto</title>
+		<meta http-equiv="Cache-Control"
+			content="no-cache, no-store, must-revalidate" />
+		<meta http-equiv="Pragma" content="no-cache" />
+		<meta http-equiv="Expires" content="0" />
+	</f:facet>
+
+	<f:facet name="last">
+		<!--[if lt IE 9]>
+		<h:outputScript library="js" name="html5.js" />
+		<![endif]-->
+		<h:outputScript library="js" name="translations.js" />
+		<h:outputScript library="js" name="wiOpen.js" />
+		<h:outputScript library="js" name="util.js" />
+		<h:outputScript library="javax.faces" name="jsf.js" />
+		<link type="text/css" rel="stylesheet"
+			href="#{request.contextPath}/resources/css/estilo.css" />
+		<link rel="shortcut icon" type="image/x-icon"
+			href="#{request.contextPath}/resources/favicon.ico" />
+	</f:facet>
+</h:head>
+<h:body style="background:bisque;">
+
+	<p:ajaxStatus>
+		<f:facet name="start">
+			<h:panelGroup>
+				<div class="ui-widget-overlay"
+					style="z-index: 4500; position: fixed;" />
+				<p:panel id="panelAjaxStart" styleClass="panelAjax"
+					style="background-color: white; position: fixed;">
+
+					<h:panelGrid id="pgAjaxLoader" columns="1"
+						style="position: static; background-color: FFFF66;border: none;">
+						<strong> <span
+							style="font-size: 10pt; font-family: Arial; color: black;">Processando
+								...</span>
+						</strong>
+						<h:graphicImage value="/resources/ajax-loader.gif" />
+
+					</h:panelGrid>
+				</p:panel>
+			</h:panelGroup>
+		</f:facet>
+
+		<f:facet name="complete">
+			<h:outputLabel value="" />
+		</f:facet>
+	</p:ajaxStatus>
+
+	<p:messages id="messages" autoUpdate="true" closable="true" />
+	<p:growl id="growl" autoUpdate="true" closable="true"></p:growl>
+	<h:form id="loginForm">
+
+		<h:panelGroup layout="block" style="text-align:center;">
+			<h:graphicImage value="/resources/gota-circulo.png" height="100px"
+				style="position:relative;top:35px;" />
+			<p:outputLabel value="Aplicativo meu Posto"
+				style="text-align:center;font-family:Charbroil;font-weight:700;font-size:62px"></p:outputLabel>
+
+
+		</h:panelGroup>
+		<br />
+
+
+		<h:panelGroup layout="block" style="text-align:center;">
+			<p:outputLabel value="LOGIN"
+				style="text-align:center;font-family:Charbroil;font-weight:700;font-size:42px"></p:outputLabel>
+
+		</h:panelGroup>
+		<br />
+		<hr></hr>
+		<div align="center">
+			<p:panel id="loginPanel"
+				style=" text-align: center; width:300px;height:200px;background:bisque; border-color:black;
+				 border-width:3px; border-radius:35px;">
+
+				<!-- <h:outputLabel value="Login" styleClass="tituloProjeto" /> -->
+
+				<br></br>
+				<p:spacer height="30" width="0"></p:spacer>
+				<h:panelGroup>
+					<p:outputLabel value="CNPJ :" for="inptCnpj"
+						style="font-size:20px;font-family:Charbroil;margin-right:10px;" />
+					<p:inputMask mask="99.999.999/9999-99" value="#{loginBean.login}"
+						id="inptCnpj" required="true"
+						requiredMessage="Campo Obrigatório: CNPJ!"
+						style="font-size:15px; color:gray;" size="18"></p:inputMask>
+				</h:panelGroup>
+				<div class="clear"></div>
+				<br></br>
+				<h:panelGroup>
+					<p:outputLabel value="Senha :" for="loginSenha"
+						style="font-size:20px;font-family:Charbroil;margin-right:10px;margin-left:-7px" />
+					<p:password feedback="false" id="loginSenha" required="true"
+						value="#{loginBean.senha}" style="font-size:15px; color:gray;"
+						size="18" requiredMessage="Campo Obrigatório: SENHA!"
+						minLength="1" />
+				</h:panelGroup>
+				<br></br>
+				<div class="clear"></div>
+				<br></br>
+				<p:spacer height="30" width="0"></p:spacer>
+				<h:panelGroup layout="block" style="float:center">
+					<p:commandButton id="btnEntrar" value="Entrar"
+						styleClass="btnMeuPosto" actionListener="#{loginBean.logar}"
+						style="text-align: center !important; padding: inherit !important;"
+						update="messages, growl, loginForm" />
+				</h:panelGroup>
+
+				<div class="clear"></div>
+
+
+				<div class="clear"></div>
+			</p:panel>
+		</div>
+		<br></br>
+		<p:spacer height="150" width="0"></p:spacer>
+		<div align="center">
+			<p:outputLabel
+				value="A MAIS NOVA FORMA DE DIVULGAÇÃO DOS PREÇOS DE COMBUSTÍVEIS"
+				style="font-size:40px;font-family:Charbroil;color:black" />
+				<br/>
+			<h:graphicImage value="/resources/positivo.png" height="100px"
+				style="position:relative;top:35px;" />
+		</div>
+
+	</h:form>
+
+
+</h:body>
+</html>

@@ -15,7 +15,10 @@
 
 <h:body>
 
-      <p:outputLabel value="teste"></p:outputLabel>
+     <f:metadata>
+		<f:event type="preRenderView"
+			listener="#{loginBean.redirecionarHome}" />
+	</f:metadata>
 
 </h:body>
 

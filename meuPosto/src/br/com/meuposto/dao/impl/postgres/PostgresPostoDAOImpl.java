@@ -31,4 +31,12 @@ implements IPostoDAO{
 		return findByNamedQueryAndNamedParams("Posto.obterPorCNPJ", params, em);
 	}
 
+	@Override
+	public List<Posto> obterporCNPJESenha(String cnpj, String senha, EntityManager em) throws ExcecaoBanco {
+		Map<String, Object> params = new HashMap<String, Object>();
+		params.put("cnpj", cnpj);
+		params.put("senha", senha);
+		return findByNamedQueryAndNamedParams("Posto.obterPorCNPJESenha", params, em);
+	}
+
 }
