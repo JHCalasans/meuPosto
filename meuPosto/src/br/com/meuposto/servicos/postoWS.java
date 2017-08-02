@@ -34,5 +34,19 @@ public class postoWS {
 			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Falha ao buscar estabelecimentos").build();
 		}
 	}
+	
+	@GET
+	@Path("/porCombustivel")
+	public Response obterPorCombustivel(@QueryParam("lat") double latitude, @QueryParam("long") double longitude,  @QueryParam("tpCombustivel") int tpCombustivel ) {
+		try {
+			List<Posto> resultado = PostoBO.getInstance().obterPostoPorCombustivel(latitude, longitude, tpCombustivel);
+			GenericEntity<List<Posto>> entidade = new GenericEntity<List<Posto>>(resultado) {
+			};
+			return Response.status(Status.OK).entity(entidade).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.INTERNAL_SERVER_ERROR).entity("Falha ao buscar estabelecimentos").build();
+		}
+	}
 
 }

@@ -21,6 +21,9 @@ public class LoginBean extends SimpleController {
 	
 	private String login; 
 	private String senha;
+	
+	private String cnpj;
+	private String email;
 
 	private boolean exibeBannerMenu = true;
 	
@@ -87,6 +90,26 @@ public class LoginBean extends SimpleController {
 
 	public void setSenha(String senha) {
 		this.senha = senha;
+	}
+
+
+	public String getCnpj() {
+		return cnpj;
+	}
+
+
+	public void setCnpj(String cnpj) {
+		this.cnpj = cnpj;
+	}
+
+
+	public String getEmail() {
+		return email;
+	}
+
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 

@@ -1,5 +1,6 @@
 package br.com.meuposto.bo;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -33,7 +34,50 @@ public class PostoBO extends MeuPostoBO {
 		try {
 			transaction.begin();
 			IPostoDAO postoDAO = fabricaDAO.getPostgresPostoDAO();
-			List<Posto> result = postoDAO.obterporDistancia(latitude, longitude, em);
+			List[] lista = postoDAO.obterporDistancia(latitude, longitude, em);
+			List<Posto> result = (List<Posto>)lista[0];
+			List<Double> distancias =   (List<Double>)lista[1];
+			int i = 0;
+			DecimalFormat df2 = new DecimalFormat(".##");
+			for(Posto posto : result){
+				posto.setDistancia(distancias.get(i));
+				if(distancias.get(i) >= 1)
+					posto.setDistanciaDoPonto("("+ df2.format(distancias.get(i)) +" Km)");
+				else
+					posto.setDistanciaDoPonto("("+ String.valueOf(distancias.get(i) * 1000).substring(0, 3) +" mts)");
+				
+				i++;
+			}
+			emUtil.commitTransaction(transaction);
+			return result;
+		} catch (ExcecaoBanco e) {
+			emUtil.rollbackTransaction(transaction);
+			throw new ExcecaoNegocio("Falha ao tentar obter posto pela distância.", e);
+		} finally {
+			emUtil.closeEntityManager(em);
+		}
+	}
+	
+	public List<Posto> obterPostoPorCombustivel(double latitude, double longitude, int tpCombustivel) throws ExcecaoNegocio {
+		EntityManager em = emUtil.getEntityManager();
+		EntityTransaction transaction = em.getTransaction();
+		try {
+			transaction.begin();
+			IPostoDAO postoDAO = fabricaDAO.getPostgresPostoDAO();
+			List[] lista = postoDAO.obterporCombustivel(latitude, longitude, tpCombustivel, em);
+			List<Posto> result = (List<Posto>)lista[0];
+			List<Double> distancias =   (List<Double>)lista[1];
+			int i = 0;
+			DecimalFormat df2 = new DecimalFormat(".##");
+			for(Posto posto : result){
+				posto.setDistancia(distancias.get(i));
+				if(distancias.get(i) >= 1)
+					posto.setDistanciaDoPonto("("+ df2.format(distancias.get(i)) +" Km)");
+				else
+					posto.setDistanciaDoPonto("("+ String.valueOf(distancias.get(i) * 1000).substring(0, 3) +" mts)");
+				
+				i++;
+			}
 			emUtil.commitTransaction(transaction);
 			return result;
 		} catch (ExcecaoBanco e) {
@@ -92,6 +136,44 @@ public class PostoBO extends MeuPostoBO {
 		}catch (Exception e) {
 			emUtil.rollbackTransaction(transaction);
 			throw new ExcecaoNegocio("Falha ao tentar gravar posto.", e);
+		} finally {
+			emUtil.closeEntityManager(em);
+		}
+	}
+	
+	public Posto desativarPosto(Posto posto) throws ExcecaoNegocio {
+		EntityManager em = emUtil.getEntityManager();
+		EntityTransaction transaction = em.getTransaction();
+		try {
+			transaction.begin();
+			IPostoDAO postoDAO = fabricaDAO.getPostgresPostoDAO();
+			posto.setAtivo(false);
+			posto.setDataDesativacao(new Date());
+			posto = postoDAO.save(posto, em);
+			emUtil.commitTransaction(transaction);
+			return posto;
+		}catch (Exception e) {
+			emUtil.rollbackTransaction(transaction);
+			throw new ExcecaoNegocio("Falha ao tentar desativar posto.", e);
+		} finally {
+			emUtil.closeEntityManager(em);
+		}
+	}
+	
+	public Posto reativarPosto(Posto posto) throws ExcecaoNegocio {
+		EntityManager em = emUtil.getEntityManager();
+		EntityTransaction transaction = em.getTransaction();
+		try {
+			transaction.begin();
+			IPostoDAO postoDAO = fabricaDAO.getPostgresPostoDAO();
+			posto.setAtivo(true);
+			posto.setDataDesativacao(null);
+			posto = postoDAO.save(posto, em);
+			emUtil.commitTransaction(transaction);
+			return posto;
+		}catch (Exception e) {
+			emUtil.rollbackTransaction(transaction);
+			throw new ExcecaoNegocio("Falha ao tentar reativar posto.", e);
 		} finally {
 			emUtil.closeEntityManager(em);
 		}

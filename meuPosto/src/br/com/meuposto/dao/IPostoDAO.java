@@ -13,7 +13,9 @@ public interface IPostoDAO extends GenericDAO<Posto, Integer> {
 
 	static CriterioOrdenacao BY_NOME_ASC = CriterioOrdenacao.asc("nome");
 	
-	public List<Posto> obterporDistancia(double latitude, double longitude,EntityManager em) throws ExcecaoBanco;
+	public List[] obterporDistancia(double latitude, double longitude,EntityManager em) throws ExcecaoBanco;
+	
+	public List[] obterporCombustivel(double latitude, double longitude, int tpCombustivel,EntityManager em) throws ExcecaoBanco;
 	
 	public List<Posto> obterporCNPJ(String cnpj,EntityManager em) throws ExcecaoBanco;
 	

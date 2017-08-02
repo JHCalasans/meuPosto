@@ -134,7 +134,7 @@
 					<p:outputLabel value="Posto :" for="nmPosto"
 						style=" font-size:20px;font-family:Charbroil; margin-right: 20px" />
 					<p:inputText styleClass="inputPrancheta" required="true"
-						value="#{meuPostoBean.posto.nome}" id="nmPosto"
+						value="#{meuPostoBean.posto.nome}" id="nmPosto" maxlength="20"
 						style="font-size:15px; color:gray;"
 						requiredMessage="Campo Obrigatório: Nome do Posto!" size="40">
 
@@ -274,6 +274,22 @@
 						style="font-size:15px; color:gray;" />
 
 				</h:panelGroup>
+				
+				<br />
+				<p:spacer height="50" width="0"></p:spacer>
+
+				<h:panelGroup layout="block" id="pngEmail"
+					style="float:left;position:relative;top:150px; margin-left:80px">
+
+					<p:outputLabel value="EMAIL :" for="email"
+						style="font-size:20px;font-family:Charbroil;margin-right:25px;" />
+
+					<p:inputText value="#{meuPostoBean.posto.email}" required="true"
+						styleClass="inputPrancheta" id="email"
+						size="20"  requiredMessage="Campo Obrigatório: Email!"
+						style="font-size:15px; color:gray;margin-right:20px" />
+
+				</h:panelGroup>				
 				<br />
 				<p:spacer height="140" width="0"></p:spacer>
 

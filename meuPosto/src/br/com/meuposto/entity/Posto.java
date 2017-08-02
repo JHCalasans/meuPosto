@@ -15,18 +15,31 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlAnyElement;
+import javax.xml.bind.annotation.XmlElement;
 
 import br.com.minhaLib.dao.Entidade;
 
 @Entity
 @Table(name = Posto.nomeTabela, schema = Posto.esquema, catalog = "meuposto")
 @NamedQueries(value = { 
-		@NamedQuery(name = "Posto.obterPorDistancia", query = "select p from Posto p"
-		+ " where p.latitude >= (:latitude - 0.2) and p.latitude <= (:latitude + 0.2) and p.longitude >= (:longitude - 0.2)  and p.longitude <= (:longitude + 0.2)"),
+		@NamedQuery(name = "Posto.obterPorDistancia", query = "select p, 6371*ACOS(COS(:pi*(90.0-p.latitude)/180)*COS((90.0-:latitude)*:pi/180)+SIN((90.0-p.latitude)*:pi/180)*SIN((90.0-:latitude)*:pi/180)*COS((:longitude-p.longitude)*:pi/180)) as distancia from Posto p join fetch p.distribuidora d"
+		+ " where p.ativo = true and p.latitude >= (:latitude - 0.2) and p.latitude <= (:latitude + 0.2) and p.longitude >= (:longitude - 0.2)  and p.longitude <= (:longitude + 0.2) order by distancia"),
+		@NamedQuery(name = "Posto.obterPorGasolinaComum", query = "select p, 6371*ACOS(COS(:pi*(90.0-p.latitude)/180)*COS((90.0-:latitude)*:pi/180)+SIN((90.0-p.latitude)*:pi/180)*SIN((90.0-:latitude)*:pi/180)*COS((:longitude-p.longitude)*:pi/180)) as distancia from Posto p join fetch p.distribuidora d"
+				+ " where p.ativo = true and p.latitude >= (:latitude - 0.2) and p.latitude <= (:latitude + 0.2) and p.longitude >= (:longitude - 0.2)  and p.longitude <= (:longitude + 0.2) order by p.gasolinaComum, distancia"),
+		@NamedQuery(name = "Posto.obterPorGasolinaAditivada", query = "select p, 6371*ACOS(COS(:pi*(90.0-p.latitude)/180)*COS((90.0-:latitude)*:pi/180)+SIN((90.0-p.latitude)*:pi/180)*SIN((90.0-:latitude)*:pi/180)*COS((:longitude-p.longitude)*:pi/180)) as distancia from Posto p join fetch p.distribuidora d"
+				+ " where p.ativo = true and p.latitude >= (:latitude - 0.2) and p.latitude <= (:latitude + 0.2) and p.longitude >= (:longitude - 0.2)  and p.longitude <= (:longitude + 0.2) order by p.gasolinaAditivada, distancia"),
+		@NamedQuery(name = "Posto.obterPorDiesel", query = "select p, 6371*ACOS(COS(:pi*(90.0-p.latitude)/180)*COS((90.0-:latitude)*:pi/180)+SIN((90.0-p.latitude)*:pi/180)*SIN((90.0-:latitude)*:pi/180)*COS((:longitude-p.longitude)*:pi/180)) as distancia from Posto p join fetch p.distribuidora d"
+				+ " where p.ativo = true and p.latitude >= (:latitude - 0.2) and p.latitude <= (:latitude + 0.2) and p.longitude >= (:longitude - 0.2)  and p.longitude <= (:longitude + 0.2) order by p.diesel, distancia"),
+		@NamedQuery(name = "Posto.obterPorAlcool", query = "select p, 6371*ACOS(COS(:pi*(90.0-p.latitude)/180)*COS((90.0-:latitude)*:pi/180)+SIN((90.0-p.latitude)*:pi/180)*SIN((90.0-:latitude)*:pi/180)*COS((:longitude-p.longitude)*:pi/180)) as distancia from Posto p join fetch p.distribuidora d"
+				+ " where p.ativo = true and p.latitude >= (:latitude - 0.2) and p.latitude <= (:latitude + 0.2) and p.longitude >= (:longitude - 0.2)  and p.longitude <= (:longitude + 0.2) order by p.alcool, distancia"),
+		@NamedQuery(name = "Posto.obterPorGnv", query = "select p, 6371*ACOS(COS(:pi*(90.0-p.latitude)/180)*COS((90.0-:latitude)*:pi/180)+SIN((90.0-p.latitude)*:pi/180)*SIN((90.0-:latitude)*:pi/180)*COS((:longitude-p.longitude)*:pi/180)) as distancia from Posto p join fetch p.distribuidora d"
+				+ " where p.ativo = true and p.latitude >= (:latitude - 0.2) and p.latitude <= (:latitude + 0.2) and p.longitude >= (:longitude - 0.2)  and p.longitude <= (:longitude + 0.2) order by p.gnv, distancia"),
 		@NamedQuery(name = "Posto.obterPorCNPJ", query = "select p from Posto p where p.cnpj like :cnpj"),
 		@NamedQuery(name = "Posto.obterPorCNPJESenha", query = "select p from Posto p where p.cnpj like :cnpj and senha like :senha")
 		})
-public class Posto extends Entidade {
+public class Posto extends Entidade{
 
 	private static final long serialVersionUID = -8805523089808569852L;
 
@@ -56,6 +69,9 @@ public class Posto extends Entidade {
 
 	@Column(name = "cep", nullable = true)
 	private String cep;
+	
+	@Column(name = "email", nullable = true)
+	private String email;
 
 	@Column(name = "numero", nullable = true)
 	private String numero;
@@ -102,6 +118,12 @@ public class Posto extends Entidade {
 
 	@Column(name = "dt_desativacao", nullable = true)
 	private Date dataDesativacao;
+	
+	@Transient
+	private double distancia;
+
+	@Transient
+	private String distanciaDoPonto;
 
 	@Override
 	public Serializable getIdentificador() {
@@ -284,5 +306,32 @@ public class Posto extends Entidade {
 	public void setDistribuidora(Distribuidora distribuidora) {
 		this.distribuidora = distribuidora;
 	}
+
+	public String getDistanciaDoPonto() {
+		
+		return distanciaDoPonto;
+	}
+
+	public void setDistanciaDoPonto(String distanciaDoPonto) {
+		this.distanciaDoPonto = distanciaDoPonto;
+	}
+
+	public double getDistancia() {
+		return distancia;
+	}
+
+	public void setDistancia(double distancia) {
+		this.distancia = distancia;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
 
 }

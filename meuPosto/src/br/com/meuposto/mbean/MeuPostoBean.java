@@ -34,6 +34,7 @@ import br.com.meuposto.entity.Posto;
 import br.com.meuposto.retornoServicosExtras.CoordenadasGoogle;
 import br.com.meuposto.retornoServicosExtras.EnderecoCep;
 import br.com.meuposto.util.ExcecoesUtil;
+import br.com.meuposto.util.Paginas;
 import br.com.minhaLib.excecao.excecaonegocio.ExcecaoNegocio;
 import br.com.minhaLib.util.FacesUtil;
 import br.com.minhaLib.util.excecao.MsgUtil;
@@ -68,8 +69,8 @@ public class MeuPostoBean extends SimpleController{
 	public void carregar() {
 		try {
 			
-			if(getPostoLogado() != null)
-				posto = getPostoLogado();
+			if (getSessionMap().containsKey("meuPosto.posto"))
+				setPosto((Posto) getSessionMap().get("meuPosto.posto"));
 			
 			if(posto == null){
 				posto = new Posto();
@@ -119,6 +120,49 @@ public class MeuPostoBean extends SimpleController{
 			ExcecoesUtil.TratarExcecao(e);
 		}
 	}
+	
+	public void salvarPreco(){
+
+		try {
+			posto.setLatitude(latEstabelecimento);
+			posto.setLongitude(lngEstabelecimento);
+			posto = PostoBO.getInstance().salvarPosto(posto);
+			MsgUtil.updateMessage(FacesMessage.SEVERITY_INFO, "Posto cadastrado com sucesso.!");
+			RequestContext context = RequestContext.getCurrentInstance();
+			context.execute("PF('dlgSalvo').show();");
+			
+		} catch (ExcecaoNegocio e) {
+			ExcecoesUtil.TratarExcecao(e);
+		}
+	}
+	
+	public void desativarPosto(){
+
+		try {
+			posto = PostoBO.getInstance().desativarPosto(posto);
+			MsgUtil.updateMessage(FacesMessage.SEVERITY_INFO, "Posto desativado com sucesso.!");
+			RequestContext context = RequestContext.getCurrentInstance();
+			context.execute("PF('dlg').hide();");
+			FacesUtil.redirecionar(null, logout(), true, null);
+			
+		} catch (ExcecaoNegocio e) {
+			ExcecoesUtil.TratarExcecao(e);
+		}
+	}
+	
+	public void reativarPosto(){
+
+		try {
+			posto = PostoBO.getInstance().reativarPosto(posto);
+			MsgUtil.updateMessage(FacesMessage.SEVERITY_INFO, "Posto reativado com sucesso.!");
+			RequestContext context = RequestContext.getCurrentInstance();
+			context.execute("PF('dlgReativar').hide();");
+			
+		} catch (ExcecaoNegocio e) {
+			ExcecoesUtil.TratarExcecao(e);
+		}
+	}
+	
 	
 	public void validarCep() {
 		if (this.cep != null && this.cep.replace("-", "").replace("_", "").length() == 8) {

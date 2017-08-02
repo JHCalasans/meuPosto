@@ -160,7 +160,7 @@ public abstract class SimpleController implements Serializable {
 
 	public String logout() {
 		try {
-			if (getSessionMap().containsKey("meuPosto.postoa"))
+			if (getSessionMap().containsKey("meuPosto.posto"))
 				getSessionMap().clear();
 
 			return "/paginas/login.xhtml?faces-redirect=true";

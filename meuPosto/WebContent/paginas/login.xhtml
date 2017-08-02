@@ -83,7 +83,7 @@
 		<hr></hr>
 		<div align="center">
 			<p:panel id="loginPanel"
-				style=" text-align: center; width:300px;height:200px;background:bisque; border-color:black;
+				style=" text-align: center; width:300px;height:250px;background:bisque; border-color:black;
 				 border-width:3px; border-radius:35px;">
 
 				<!-- <h:outputLabel value="Login" styleClass="tituloProjeto" /> -->
@@ -117,6 +117,19 @@
 						styleClass="btnMeuPosto" actionListener="#{loginBean.logar}"
 						style="text-align: center !important; padding: inherit !important;"
 						update="messages, growl, loginForm" />
+
+					<p:button id="btnCadastro" value="Cadastro"
+						outcome="posto/cadastroPosto.proj" styleClass="btnMeuPosto"
+						style="text-align: center !important; padding: inherit !important;margin-left:5px;" />
+
+				</h:panelGroup>
+				<br></br>
+				<div class="clear"></div>
+				<h:panelGroup>
+					<p:commandLink value="Esqueci a senha" immediate="true"
+						style="font-size:14px;color:blue; text-decoration:underline;"
+						onclick="PF('dlgSenha').show();">
+					</p:commandLink>
 				</h:panelGroup>
 
 				<div class="clear"></div>
@@ -131,13 +144,61 @@
 			<p:outputLabel
 				value="A MAIS NOVA FORMA DE DIVULGAÇÃO DOS PREÇOS DE COMBUSTÍVEIS"
 				style="font-size:40px;font-family:Charbroil;color:black" />
-				<br/>
+			<br />
 			<h:graphicImage value="/resources/positivo.png" height="100px"
 				style="position:relative;top:35px;" />
 		</div>
 
 	</h:form>
 
+	<p:dialog widgetVar="dlgSenha" showEffect="fade" resizable="false"
+		closable="true" header="Recuperar Senha" styleClass="dialogBox">
+		<h:form prependId="false">
+			<h:panelGrid columns="2">
+				<h:form>
+
+					<h:panelGroup>
+
+						<p:outputLabel value="CNPJ :" for="inptCnpj"
+							style="font-size:20px;font-family:Charbroil;margin-right:22px;margin-left:7px;" />
+
+						<p:inputMask mask="99.999.999/9999-99" value="#{loginBean.cnpj}"
+							id="inptCnpj" requiredMessage="Campo Obrigatório: CNPJ!"
+							required="true" style="font-size:15px; color:gray;" size="20"></p:inputMask>
+
+					</h:panelGroup>
+					<br></br>
+					<div class="clear"></div>
+					<h:panelGroup>
+
+						<p:outputLabel value="EMAIL :" for="inptCnpj"
+							style="font-size:20px;font-family:Charbroil;margin-right:22px;" />
+
+
+						<p:inputText value="#{loginBean.email}" required="true" id="email"
+							size="20" requiredMessage="Campo Obrigatório: Email!"
+							style="font-size:15px; color:gray;margin-right:20px" />
+
+					</h:panelGroup>
+
+				</h:form>
+				<f:facet name="footer">
+					<div align="center" style="margin-top:5px;">
+						<p:commandButton value="Confirmar"
+							style="margin-right:10px;font-size: 15px !important; 
+						text-align: center !important;	height: 30px !important;
+						width: 80px !important;"
+							styleClass="btnMeuPosto" />
+						<p:commandButton value="Cancelar" styleClass="btnMeuPostoExcluir"
+							onclick="PF('dlgSenha').hide();" immediate="true"
+							style="font-size: 15px !important; 
+							text-align: center !important;	height: 30px !important;
+						width: 80px !important;" />
+					</div>
+				</f:facet>
+			</h:panelGrid>
+		</h:form>
+	</p:dialog>
 
 </h:body>
 </html>
