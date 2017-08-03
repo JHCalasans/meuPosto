@@ -34,6 +34,7 @@ import br.com.meuposto.entity.Posto;
 import br.com.meuposto.retornoServicosExtras.CoordenadasGoogle;
 import br.com.meuposto.retornoServicosExtras.EnderecoCep;
 import br.com.meuposto.util.ExcecoesUtil;
+import br.com.meuposto.util.FuncoesUtil;
 import br.com.meuposto.util.Paginas;
 import br.com.minhaLib.excecao.excecaonegocio.ExcecaoNegocio;
 import br.com.minhaLib.util.FacesUtil;
@@ -64,6 +65,12 @@ public class MeuPostoBean extends SimpleController{
 	private double latEstabelecimento;
 	
 	private double lngEstabelecimento;
+	
+	private String senhaAtual;
+	
+	private String senhaNova;
+	
+	private String confSenha;
 	
 	@PostConstruct
 	public void carregar() {
@@ -97,6 +104,38 @@ public class MeuPostoBean extends SimpleController{
         mapModel.addOverlay(marker);
     }
 	
+	public void alterarSenha() {
+       try {
+    	   if(FuncoesUtil.criptografarSenha(senhaAtual).equals(getPostoLogado().getSenha())){
+			   if(senhaNova.equals(confSenha)){
+				   getPostoLogado().setSenha(FuncoesUtil.criptografarSenha(senhaNova));
+				   posto = PostoBO.getInstance().alterarPosto(getPostoLogado());
+				   MsgUtil.updateMessage(FacesMessage.SEVERITY_INFO, "Senha alterada com sucesso.!");
+				   RequestContext context = RequestContext.getCurrentInstance();
+					context.execute("PF('dlgSenha').hide();");
+			   }else
+					MsgUtil.updateMessage(FacesMessage.SEVERITY_ERROR, "Nova senha não confere com a confirmação!");
+		   }else
+				MsgUtil.updateMessage(FacesMessage.SEVERITY_ERROR, "Senha atual incorreta!");
+		} catch (Exception e) {
+			 ExcecoesUtil.TratarExcecao(e);
+		}
+    }
+	
+	public void verificaPreco() {
+        if(getPostoLogado().getGasolinaComum() == null)
+        	getPostoLogado().setGasolinaComum(0.00F);
+        if(getPostoLogado().getGasolinaAditivada() == null)
+        	getPostoLogado().setGasolinaAditivada(0.00F);
+        if(getPostoLogado().getAlcool() == null)
+        	getPostoLogado().setAlcool(0.00F);
+        if(getPostoLogado().getDiesel() == null)
+        	getPostoLogado().setDiesel(0.00F);
+        if(getPostoLogado().getGnv() == null)
+        	getPostoLogado().setGnv(0.00F);
+        
+    }
+	
 	public void salvarPosto(){
 		if(posto.getEstado() == null || posto.getEstado().isEmpty()){
 			MsgUtil.updateMessage(FacesMessage.SEVERITY_ERROR, "Favor validar CEP!");
@@ -124,12 +163,9 @@ public class MeuPostoBean extends SimpleController{
 	public void salvarPreco(){
 
 		try {
-			posto.setLatitude(latEstabelecimento);
-			posto.setLongitude(lngEstabelecimento);
-			posto = PostoBO.getInstance().salvarPosto(posto);
-			MsgUtil.updateMessage(FacesMessage.SEVERITY_INFO, "Posto cadastrado com sucesso.!");
-			RequestContext context = RequestContext.getCurrentInstance();
-			context.execute("PF('dlgSalvo').show();");
+
+			posto = PostoBO.getInstance().salvarPreco(getPostoLogado());
+			MsgUtil.updateMessage(FacesMessage.SEVERITY_INFO, "Preço cadastrado com sucesso.!");
 			
 		} catch (ExcecaoNegocio e) {
 			ExcecoesUtil.TratarExcecao(e);
@@ -416,6 +452,30 @@ public class MeuPostoBean extends SimpleController{
 
 	public void setConfirmSenha(String confirmSenha) {
 		this.confirmSenha = confirmSenha;
+	}
+
+	public String getSenhaAtual() {
+		return senhaAtual;
+	}
+
+	public void setSenhaAtual(String senhaAtual) {
+		this.senhaAtual = senhaAtual;
+	}
+
+	public String getSenhaNova() {
+		return senhaNova;
+	}
+
+	public void setSenhaNova(String senhaNova) {
+		this.senhaNova = senhaNova;
+	}
+
+	public String getConfSenha() {
+		return confSenha;
+	}
+
+	public void setConfSenha(String confSenha) {
+		this.confSenha = confSenha;
 	}
 	
 

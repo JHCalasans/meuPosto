@@ -29,7 +29,7 @@
 		<link type="text/css" rel="stylesheet"
 			href="#{request.contextPath}/resources/css/estilo.css" />
 		<link rel="shortcut icon" type="image/x-icon"
-			href="#{request.contextPath}/resources/favico.ico" />
+			href="#{request.contextPath}/resources/favicon.ico" />
 	</f:facet>
 
 	<script
@@ -172,14 +172,14 @@
 
 					<p:inputText value="#{meuPostoBean.posto.estado}"
 						styleClass="inputPrancheta" placeholder="Obtido pelo CEP"
-						size="15" readonly="true"
+						size="15" 
 						style="font-size:15px; color:gray;margin-right:20px" />
 
 					<p:outputLabel value="CIDADE :"
 						style="font-size:20px;font-family:Charbroil;margin-right:20px;" />
 
 					<p:inputText value="#{meuPostoBean.posto.cidade}" size="14"
-						readonly="true" placeholder="Obtida pelo CEP"
+						 placeholder="Obtida pelo CEP"
 						styleClass="inputPrancheta" style="font-size:15px; color:gray;" />
 				</h:panelGroup>
 				<br />
@@ -193,7 +193,7 @@
 
 					<p:inputText value="#{meuPostoBean.posto.logradouro}"
 						styleClass="inputPrancheta" placeholder="Obtido pelo CEP"
-						size="40" readonly="true"
+						size="40" 
 						style="font-size:15px; color:gray;margin-right:20px" />
 
 				</h:panelGroup>
@@ -208,7 +208,7 @@
 
 					<p:inputText value="#{meuPostoBean.posto.bairro}"
 						styleClass="inputPrancheta" placeholder="Obtido pelo CEP"
-						size="20" readonly="true"
+						size="20" 
 						style="font-size:15px; color:gray;margin-right:20px" />
 
 					<p:outputLabel value="NÚMERO :"
@@ -346,7 +346,7 @@
 			<br />
 			<p:panel>
 
-				<p:gmap id="gmap" center="#{meuPostoBean.coordenadas}" zoom="16"
+				<p:gmap id="gmap" center="#{meuPostoBean.coordenadas}" zoom="15"
 					type="terrain" style="width:550px;height:250px; text-align:center;"
 					model="#{meuPostoBean.mapModel}"
 					onPointClick="handlePointClick(event);" widgetVar="map" />

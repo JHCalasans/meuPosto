@@ -29,7 +29,7 @@
 		<link type="text/css" rel="stylesheet"
 			href="#{request.contextPath}/resources/css/estilo.css" />
 		<link rel="shortcut icon" type="image/x-icon"
-			href="#{request.contextPath}/resources/favico.ico" />
+			href="#{request.contextPath}/resources/favicon.ico" />
 	</f:facet>
 	<h:outputScript library="js" name="somenteNumeros.js" />
 
@@ -67,7 +67,8 @@
 
 	<p:messages id="messages" autoUpdate="true" closable="true" />
 	<p:growl id="growl" autoUpdate="true" closable="true"></p:growl>
-	<h:form id="formCad">
+	<h:form id="formCad" prependId="false">
+
 
 		<h:panelGroup layout="block" style="margin-top:-15px;">
 			<h:graphicImage value="/resources/gota-circulo.png" height="100px"
@@ -88,7 +89,7 @@
 		</h:panelGroup>
 		<br />
 		<div align="center">
-			<p:panel
+			<p:panel id="painelHome"
 				style="width:600px;height:700px;border-color:brown;border-width:3px; border-radius:10px;">
 				<h:panelGroup layout="block">
 					<p:outputLabel value="DADOS DO POSTO"
@@ -152,9 +153,10 @@
 					<p:outputLabel value="R$ " style="font-size:20px;" />
 
 					<p:inputMask id="gasolinaComum" style="font-size:20px;color: gray;"
-						value="#{meuPostoBean.postoLogado.gasolinaComum}" mask="9,99"
+						value="#{meuPostoBean.postoLogado.gasolinaComum}" mask="9.?99"
 						styleClass="inputPrancheta" size="4">
-
+						<p:ajax event="change" listener="#{meuPostoBean.verificaPreco}"
+							update="@form"></p:ajax>
 					</p:inputMask>
 
 
@@ -172,9 +174,10 @@
 
 					<p:inputMask id="gasolinaAditivada"
 						style="font-size:20px;color: gray;"
-						value="#{meuPostoBean.postoLogado.gasolinaAditivada}" mask="9,99"
+						value="#{meuPostoBean.postoLogado.gasolinaAditivada}" mask="9.?99"
 						styleClass="inputPrancheta" size="4">
-
+						<p:ajax event="change" listener="#{meuPostoBean.verificaPreco}"
+							update="@form"></p:ajax>
 					</p:inputMask>
 
 				</h:panelGroup>
@@ -190,9 +193,10 @@
 					<p:outputLabel value="R$ " style="font-size:20px;" />
 
 					<p:inputMask id="etanol" style="font-size:20px;color: gray;"
-						value="#{meuPostoBean.postoLogado.alcool}" mask="9,99"
+						value="#{meuPostoBean.postoLogado.alcool}" mask="9.?99"
 						styleClass="inputPrancheta" size="4">
-
+						<p:ajax event="change" listener="#{meuPostoBean.verificaPreco}"
+							update="@form"></p:ajax>
 					</p:inputMask>
 
 
@@ -209,9 +213,10 @@
 					<p:outputLabel value="R$ " style="font-size:20px;" />
 
 					<p:inputMask id="diesel" style="font-size:20px;color: gray;"
-						value="#{meuPostoBean.postoLogado.diesel}" mask="9,99"
+						value="#{meuPostoBean.postoLogado.diesel}" mask="9.?99"
 						styleClass="inputPrancheta" size="4">
-
+						<p:ajax event="change" update="@form"
+							listener="#{meuPostoBean.verificaPreco}"></p:ajax>
 					</p:inputMask>
 
 
@@ -219,7 +224,6 @@
 
 				<br />
 				<div class="clear"></div>
-
 				<h:panelGroup layout="block" id="pngGNV"
 					style="float:left;margin-top:20px;margin-left:143px;">
 
@@ -228,8 +232,10 @@
 					<p:outputLabel value="R$ " style="font-size:20px;" />
 
 					<p:inputMask id="gnv" style="font-size:20px;color: gray;"
-						value="#{meuPostoBean.postoLogado.gnv}" mask="9,99"
+						value="#{meuPostoBean.postoLogado.gnv}" mask="9.?99"
 						styleClass="inputPrancheta" size="4">
+						<p:ajax event="change" listener="#{meuPostoBean.verificaPreco}"
+							update="@form"></p:ajax>
 
 					</p:inputMask>
 
@@ -239,48 +245,72 @@
 				<br />
 				<div class="clear"></div>
 				<p:spacer height="50" width="0"></p:spacer>
-
 				<h:panelGroup>
+					<p:commandButton value="Salvar"
+						actionListener="#{meuPostoBean.salvarPreco}"
+						styleClass="btnMeuPosto" update="painelHome"
+						style="text-align: center !important;">
 
-					<p:commandButton value="Salvar" actionListener="#{meuPostoBean.salvarPreco}"
-						styleClass="btnMeuPosto"
-						style="text-align: center !important;"></p:commandButton>
-						
-					
 
+					</p:commandButton>
 				</h:panelGroup>
-				
+
 				<br />
 				<div class="clear"></div>
 				<p:spacer height="20" width="0"></p:spacer>
 
 				<h:panelGroup>
-					<p:commandLink value="Desativar Posto" style="color:red;text-decoration: underline;" immediate="true" onclick="PF('dlg').show();" rendered="#{meuPostoBean.postoLogado.ativo == true}"></p:commandLink>
-					
-					<p:commandLink value="Reativar Posto" style="color:blue;text-decoration: underline;" immediate="true" onclick="PF('dlgReativar').show();" rendered="#{meuPostoBean.postoLogado.ativo == false}"></p:commandLink>
+					<p:commandLink value="Alterar Senha"
+						style="color:blue;text-decoration: underline;" immediate="true"
+						onclick="PF('dlgSenha').show();"
+						rendered="#{meuPostoBean.postoLogado.ativo == true}">
+					</p:commandLink>
+
 
 				</h:panelGroup>
-				
+
 				<br />
 				<div class="clear"></div>
-				<p:spacer height="70" width="450"></p:spacer>
+				<p:spacer height="70" width="0"></p:spacer>
+
 				<h:panelGroup>
-					<p:commandLink  action="#{meuPostoBean.logout}" immediate="true" title="Sair">
-					<h:graphicImage url="/resources/sair.png"
+					<p:commandLink value="Desativar Posto"
+						style="color:red;text-decoration: underline;" immediate="true"
+						onclick="PF('dlg').show();"
+						rendered="#{meuPostoBean.postoLogado.ativo == true}">
+					</p:commandLink>
+
+					<p:commandLink value="Reativar Posto"
+						style="color:blue;text-decoration: underline;" immediate="true"
+						onclick="PF('dlgReativar').show();"
+						rendered="#{meuPostoBean.postoLogado.ativo == false}"></p:commandLink>
+
+				</h:panelGroup>
+
+				<br />
+				<div class="clear"></div>
+				<p:spacer height="0" width="480"></p:spacer>
+				<h:panelGroup>
+					<p:commandLink action="#{meuPostoBean.logout}" immediate="true"
+						title="Sair" ajax="true">
+						<h:graphicImage url="/resources/sair.png"
 							style="border-style: none" />
-					
+
 					</p:commandLink>
 
 				</h:panelGroup>
+
+
 
 			</p:panel>
 
 		</div>
 
 	</h:form>
-	
-		<p:dialog widgetVar="dlg" showEffect="fade" resizable="false"
-		closable="false" header="Confirma a desativação do posto?">
+
+	<p:dialog widgetVar="dlg" showEffect="fade" resizable="false"
+		styleClass="dialogBox" closable="false"
+		header="Confirma a desativação do posto?">
 		<h:form prependId="false">
 			<h:panelGrid columns="2">
 				<f:facet name="footer">
@@ -288,8 +318,8 @@
 						style="margin-right:10px;font-size: 15px !important; 
 						text-align: center !important;	height: 30px !important;
 						width: 80px !important;"
-						actionListener="#{meuPostoBean.desativarPosto}" 
-						 styleClass="btnMeuPosto" />
+						actionListener="#{meuPostoBean.desativarPosto}"
+						styleClass="btnMeuPosto" />
 					<p:commandButton value="Cancelar" styleClass="btnMeuPostoExcluir"
 						onclick="PF('dlg').hide();"
 						style="font-size: 15px !important; 
@@ -299,9 +329,10 @@
 			</h:panelGrid>
 		</h:form>
 	</p:dialog>
-	
+
 	<p:dialog widgetVar="dlgReativar" showEffect="fade" resizable="false"
-		closable="false" header="Confirma a reativação do posto?">
+		styleClass="dialogBox" closable="false"
+		header="Confirma a reativação do posto?">
 		<h:form prependId="false">
 			<h:panelGrid columns="2">
 				<f:facet name="footer">
@@ -310,13 +341,75 @@
 						text-align: center !important;	height: 30px !important;
 						width: 80px !important;"
 						actionListener="#{meuPostoBean.reativarPosto}" update="formCad"
-						 styleClass="btnMeuPosto" />
+						styleClass="btnMeuPosto" />
 					<p:commandButton value="Cancelar" styleClass="btnMeuPostoExcluir"
 						onclick="PF('dlgReativar').hide();"
 						style="font-size: 15px !important; 
 							text-align: center !important;	height: 30px !important;
 						width: 80px !important;" />
 				</f:facet>
+			</h:panelGrid>
+		</h:form>
+	</p:dialog>
+
+	<p:dialog widgetVar="dlgSenha" showEffect="fade" resizable="false"
+		styleClass="dialogBox" closable="false" header="Alterar Senha">
+		<h:form prependId="false">
+			<h:panelGrid columns="2">
+				<h:form>
+					<h:panelGroup style="margin-left:37px;">
+						<p:outputLabel value="SENHA ATUAL :" for="inptSenha"
+							style="font-size:20px;font-family:Charbroil;margin-right:22px;margin-left:7px;" />
+
+						<p:password value="#{meuPostoBean.senhaAtual}" required="true"
+							id="inptSenha" size="20"
+							requiredMessage="Campo Obrigatório: Senha Atual!"
+							style="font-size:15px; color:gray;margin-right:20px" />
+
+					</h:panelGroup>
+					<br></br>
+					<div class="clear"></div>
+					<h:panelGroup style="margin-left:48px;">
+						<p:outputLabel value="NOVA SENHA :" for="inptNvSenha"
+							style="font-size:20px;font-family:Charbroil;margin-right:22px;" />
+
+						<p:password value="#{meuPostoBean.senhaNova}" required="true"
+							id="inptNvSenha" size="20"
+							requiredMessage="Campo Obrigatório: Nova Senha!"
+							style="font-size:15px; color:gray;margin-right:20px" />
+
+					</h:panelGroup>
+
+					<br></br>
+					<div class="clear"></div>
+					<h:panelGroup>
+						<p:outputLabel value="CONFIRMA A SENHA :" for="inptConf"
+							style="font-size:20px;font-family:Charbroil;margin-right:22px;" />
+
+						<p:password value="#{meuPostoBean.confSenha}" required="true"
+							id="inptConf" size="20"
+							requiredMessage="Campo Obrigatório: Confirmação de Senha!"
+							style="font-size:15px; color:gray;margin-right:20px" />
+
+					</h:panelGroup>
+
+				</h:form>
+				<f:facet name="footer">
+					<div align="center" style="margin-top: 5px;">
+						<p:commandButton value="Confirmar"
+							style="margin-right:10px;font-size: 15px !important; 
+						text-align: center !important;	height: 30px !important;
+						width: 80px !important;"
+							actionListener="#{meuPostoBean.alterarSenha}" update="formCad"
+							styleClass="btnMeuPosto" />
+						<p:commandButton value="Cancelar" styleClass="btnMeuPostoExcluir"
+							onclick="PF('dlgSenha').hide();" immediate="true"
+							style="font-size: 15px !important; 
+							text-align: center !important;	height: 30px !important;
+						width: 80px !important;" />
+					</div>
+				</f:facet>
+
 			</h:panelGrid>
 		</h:form>
 	</p:dialog>

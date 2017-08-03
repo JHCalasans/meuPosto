@@ -120,12 +120,13 @@
 
 					<p:button id="btnCadastro" value="Cadastro"
 						outcome="posto/cadastroPosto.proj" styleClass="btnMeuPosto"
-						style="text-align: center !important; padding: inherit !important;margin-left:5px;" />
+						style="text-align: center !important; padding: inherit !important;margin-left:5px;
+						background:-webkit-linear-gradient(top, #627d4d 45%,#1f3b08 100%) !important;" />
 
 				</h:panelGroup>
 				<br></br>
 				<div class="clear"></div>
-				<h:panelGroup>
+				<h:panelGroup rendered="false">
 					<p:commandLink value="Esqueci a senha" immediate="true"
 						style="font-size:14px;color:blue; text-decoration:underline;"
 						onclick="PF('dlgSenha').show();">

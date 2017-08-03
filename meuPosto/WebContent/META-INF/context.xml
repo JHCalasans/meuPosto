@@ -11,7 +11,7 @@
 		removeAbandoned="true" 
 		removeAbandonedTimeout="60" 
 		type="javax.sql.DataSource"
-		url="jdbc:postgresql://localhost:5432/meuposto" 
+		url="jdbc:postgresql://104.131.104.191:5432/meuposto" 
 		username="meuposto" />
 	<ResourceLink global="jdbc/postgresapp" 
 		name="jdbc/postgresapp" 

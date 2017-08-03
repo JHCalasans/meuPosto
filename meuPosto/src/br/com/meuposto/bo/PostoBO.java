@@ -121,6 +121,11 @@ public class PostoBO extends MeuPostoBO {
 			IPostoDAO postoDAO = fabricaDAO.getPostgresPostoDAO();
 			posto.setAtivo(true);
 			posto.setDataCriacao(new Date());
+			posto.setGasolinaComum(0.00F);
+			posto.setGasolinaAditivada(0.00F);
+			posto.setAlcool(0.00F);
+			posto.setDiesel(0.00F);
+			posto.setGnv(0.00F);
 			posto.setSenha(FuncoesUtil.criptografarSenha(posto.getSenha()));
 			List<Posto> lista = postoDAO.obterporCNPJ(posto.getCnpj(), em);
 			if (lista != null && lista.size() > 0) {
@@ -133,6 +138,40 @@ public class PostoBO extends MeuPostoBO {
 		} catch (ExcecaoNegocio e) {
 			emUtil.rollbackTransaction(transaction);
 			throw new ExcecaoNegocio(e.getMessage(), e);
+		}catch (Exception e) {
+			emUtil.rollbackTransaction(transaction);
+			throw new ExcecaoNegocio("Falha ao tentar gravar posto.", e);
+		} finally {
+			emUtil.closeEntityManager(em);
+		}
+	}
+	
+	public Posto alterarPosto(Posto posto) throws ExcecaoNegocio {
+		EntityManager em = emUtil.getEntityManager();
+		EntityTransaction transaction = em.getTransaction();
+		try {
+			transaction.begin();
+			IPostoDAO postoDAO = fabricaDAO.getPostgresPostoDAO();
+			posto = postoDAO.save(posto, em);
+			emUtil.commitTransaction(transaction);
+			return posto;
+		}catch (Exception e) {
+			emUtil.rollbackTransaction(transaction);
+			throw new ExcecaoNegocio("Falha ao tentar alterar posto.", e);
+		} finally {
+			emUtil.closeEntityManager(em);
+		}
+	}
+	
+	public Posto salvarPreco(Posto posto) throws ExcecaoNegocio {
+		EntityManager em = emUtil.getEntityManager();
+		EntityTransaction transaction = em.getTransaction();
+		try {
+			transaction.begin();
+			IPostoDAO postoDAO = fabricaDAO.getPostgresPostoDAO();
+			posto = postoDAO.save(posto, em);
+			emUtil.commitTransaction(transaction);
+			return posto;
 		}catch (Exception e) {
 			emUtil.rollbackTransaction(transaction);
 			throw new ExcecaoNegocio("Falha ao tentar gravar posto.", e);
