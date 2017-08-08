@@ -40,113 +40,112 @@ import br.com.minhaLib.excecao.excecaonegocio.ExcecaoNegocio;
 import br.com.minhaLib.util.FacesUtil;
 import br.com.minhaLib.util.excecao.MsgUtil;
 
-
-
-@ManagedBean(name="meuPostoBean")
+@ManagedBean(name = "meuPostoBean")
 @ViewScoped
-public class MeuPostoBean extends SimpleController{
+public class MeuPostoBean extends SimpleController {
 
 	private static final long serialVersionUID = 7192987321793570813L;
-	
+
 	private Posto posto;
-	
+
 	private String cep;
-	
+
 	private String confirmSenha;
-	
+
 	private List<Distribuidora> listaDistribuidoras = new ArrayList<Distribuidora>();
-	
+
 	private Distribuidora distribuidora;
-	
+
 	private MapModel mapModel;
-	
+
 	private LatLng coordenadas;
-	
+
 	private double latEstabelecimento;
-	
+
 	private double lngEstabelecimento;
-	
+
 	private String senhaAtual;
-	
+
 	private String senhaNova;
-	
+
 	private String confSenha;
 	
+	
+
 	@PostConstruct
 	public void carregar() {
 		try {
-			
+
 			if (getSessionMap().containsKey("meuPosto.posto"))
 				setPosto((Posto) getSessionMap().get("meuPosto.posto"));
-			
-			if(posto == null){
+
+			if (posto == null) {
 				posto = new Posto();
 				mapModel = new DefaultMapModel();
-				coordenadas = new LatLng(-10.9536484,-37.0437752);
+				coordenadas = new LatLng(-10.9536484, -37.0437752);
 			}
 			setListaDistribuidoras(DistribuidoraBO.getInstance().obterAtivas());
-			
-			
 
 		} catch (Exception e) {
 			ExcecoesUtil.TratarExcecao(e);
 		}
 	}
-	
-	public String navegarHome(){
-		getSessionMap().put("meuPosto.posto", posto);	
+
+	public String navegarHome() {
+		getSessionMap().put("meuPosto.posto", posto);
 		return "home.proj?faces-redirect=true";
 	}
-	
+
 	public void addMarker() {
-        Marker marker = new Marker(new org.primefaces.model.map.LatLng(latEstabelecimento, lngEstabelecimento), "Meu Posto");
-        mapModel.getMarkers().clear();
-        mapModel.addOverlay(marker);
-    }
-	
+		Marker marker = new Marker(new org.primefaces.model.map.LatLng(latEstabelecimento, lngEstabelecimento),
+				"Meu Posto");
+		mapModel.getMarkers().clear();
+		mapModel.addOverlay(marker);
+	}
+
 	public void alterarSenha() {
-       try {
-    	   if(FuncoesUtil.criptografarSenha(senhaAtual).equals(getPostoLogado().getSenha())){
-			   if(senhaNova.equals(confSenha)){
-				   getPostoLogado().setSenha(FuncoesUtil.criptografarSenha(senhaNova));
-				   posto = PostoBO.getInstance().alterarPosto(getPostoLogado());
-				   MsgUtil.updateMessage(FacesMessage.SEVERITY_INFO, "Senha alterada com sucesso.!");
-				   RequestContext context = RequestContext.getCurrentInstance();
+		try {
+			if (FuncoesUtil.criptografarSenha(senhaAtual).equals(getPostoLogado().getSenha())) {
+				if (senhaNova.equals(confSenha)) {
+					getPostoLogado().setSenha(FuncoesUtil.criptografarSenha(senhaNova));
+					posto = PostoBO.getInstance().alterarPosto(getPostoLogado());
+					MsgUtil.updateMessage(FacesMessage.SEVERITY_INFO, "Senha alterada com sucesso.!");
+					RequestContext context = RequestContext.getCurrentInstance();
 					context.execute("PF('dlgSenha').hide();");
-			   }else
+				} else
 					MsgUtil.updateMessage(FacesMessage.SEVERITY_ERROR, "Nova senha não confere com a confirmação!");
-		   }else
+			} else
 				MsgUtil.updateMessage(FacesMessage.SEVERITY_ERROR, "Senha atual incorreta!");
 		} catch (Exception e) {
-			 ExcecoesUtil.TratarExcecao(e);
+			ExcecoesUtil.TratarExcecao(e);
 		}
-    }
-	
+	}
+
 	public void verificaPreco() {
-        if(getPostoLogado().getGasolinaComum() == null)
-        	getPostoLogado().setGasolinaComum(0.00F);
-        if(getPostoLogado().getGasolinaAditivada() == null)
-        	getPostoLogado().setGasolinaAditivada(0.00F);
-        if(getPostoLogado().getAlcool() == null)
-        	getPostoLogado().setAlcool(0.00F);
-        if(getPostoLogado().getDiesel() == null)
-        	getPostoLogado().setDiesel(0.00F);
-        if(getPostoLogado().getGnv() == null)
-        	getPostoLogado().setGnv(0.00F);
-        
-    }
-	
-	public void salvarPosto(){
-		if(posto.getEstado() == null || posto.getEstado().isEmpty()){
+		if (getPostoLogado().getGasolinaComum() == null)
+			getPostoLogado().setGasolinaComum(0.00F);
+		if (getPostoLogado().getGasolinaAditivada() == null)
+			getPostoLogado().setGasolinaAditivada(0.00F);
+		if (getPostoLogado().getAlcool() == null)
+			getPostoLogado().setAlcool(0.00F);
+		if (getPostoLogado().getDiesel() == null)
+			getPostoLogado().setDiesel(0.00F);
+		if (getPostoLogado().getGnv() == null)
+			getPostoLogado().setGnv(0.00F);
+
+	}
+
+	public void salvarPosto() {
+		if (posto.getEstado() == null || posto.getEstado().isEmpty()) {
 			MsgUtil.updateMessage(FacesMessage.SEVERITY_ERROR, "Favor validar CEP!");
-			
+
 		}
-		
-		if(!posto.getSenha().equals(confirmSenha)){
+
+		if (!posto.getSenha().equals(confirmSenha)) {
 			MsgUtil.updateMessage(FacesMessage.SEVERITY_ERROR, "Confirmação de senha diferente da senha!");
-			 
+
 		}
-		
+
 		try {
 			posto.setLatitude(latEstabelecimento);
 			posto.setLongitude(lngEstabelecimento);
@@ -154,25 +153,25 @@ public class MeuPostoBean extends SimpleController{
 			MsgUtil.updateMessage(FacesMessage.SEVERITY_INFO, "Posto cadastrado com sucesso.!");
 			RequestContext context = RequestContext.getCurrentInstance();
 			context.execute("PF('dlgSalvo').show();");
-			
+
 		} catch (ExcecaoNegocio e) {
 			ExcecoesUtil.TratarExcecao(e);
 		}
 	}
-	
-	public void salvarPreco(){
+
+	public void salvarPreco() {
 
 		try {
 
 			posto = PostoBO.getInstance().salvarPreco(getPostoLogado());
 			MsgUtil.updateMessage(FacesMessage.SEVERITY_INFO, "Preço cadastrado com sucesso.!");
-			
+
 		} catch (ExcecaoNegocio e) {
 			ExcecoesUtil.TratarExcecao(e);
 		}
 	}
-	
-	public void desativarPosto(){
+
+	public void desativarPosto() {
 
 		try {
 			posto = PostoBO.getInstance().desativarPosto(posto);
@@ -180,36 +179,65 @@ public class MeuPostoBean extends SimpleController{
 			RequestContext context = RequestContext.getCurrentInstance();
 			context.execute("PF('dlg').hide();");
 			FacesUtil.redirecionar(null, logout(), true, null);
-			
+
 		} catch (ExcecaoNegocio e) {
 			ExcecoesUtil.TratarExcecao(e);
 		}
 	}
-	
-	public void reativarPosto(){
+
+	public void reativarPosto() {
 
 		try {
 			posto = PostoBO.getInstance().reativarPosto(posto);
 			MsgUtil.updateMessage(FacesMessage.SEVERITY_INFO, "Posto reativado com sucesso.!");
 			RequestContext context = RequestContext.getCurrentInstance();
 			context.execute("PF('dlgReativar').hide();");
-			
+
 		} catch (ExcecaoNegocio e) {
 			ExcecoesUtil.TratarExcecao(e);
 		}
 	}
-	
-	
+
+	public void validarCNPJ() {
+		try {
+			HttpClient httpClient = HttpClients.custom().build();
+
+			HttpUriRequest request = RequestBuilder.get()
+					.setUri("https://www.receitaws.com.br/v1/cnpj/"
+							+ this.posto.getCnpj().replace(".", "").replaceAll("/", "").replaceAll("-", ""))
+					.setHeader("accept", "application/json").build();
+
+			HttpResponse response = httpClient.execute(request);
+
+			if (response.getStatusLine().getStatusCode() != 200) {
+				throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+			}
+
+			BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
+			String output;
+			String json = "";
+			while ((output = br.readLine()) != null) {
+				json += output + "\n";
+			}
+			
+			Gson gson = new Gson();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			MsgUtil.updateMessage(FacesMessage.SEVERITY_ERROR, "Não foi possível buscar informações do CNPJ!.", "");
+		}
+
+	}
+
 	public void validarCep() {
 		if (this.cep != null && this.cep.replace("-", "").replace("_", "").length() == 8) {
 			try {
 
 				HttpClient httpClient = HttpClients.custom().build();
 
-				HttpUriRequest request = RequestBuilder.get().setUri("http://www.viacep.com.br/ws/" + this.cep.replace("-", "") + "/json/")
-															 .setHeader("accept", "application/json")
-															 .build();
-				
+				HttpUriRequest request = RequestBuilder.get()
+						.setUri("http://www.viacep.com.br/ws/" + this.cep.replace("-", "") + "/json/")
+						.setHeader("accept", "application/json").build();
 
 				HttpResponse response = httpClient.execute(request);
 
@@ -224,9 +252,7 @@ public class MeuPostoBean extends SimpleController{
 				while ((output = br.readLine()) != null) {
 					json += output + "\n";
 				}
-				
 
-				
 				Gson gson = new Gson();
 				EnderecoCep end = gson.fromJson(json, EnderecoCep.class);
 				this.getPosto().setCep(this.cep);
@@ -234,8 +260,7 @@ public class MeuPostoBean extends SimpleController{
 				this.getPosto().setLogradouro(end.getLogradouro());
 				this.getPosto().setSiglaEstado(end.getUf());
 				this.getPosto().setBairro(end.getBairro());
-				
-				
+
 				switch (end.getUf()) {
 				case "RO":
 					this.getPosto().setEstado("Rondônia");
@@ -319,9 +344,9 @@ public class MeuPostoBean extends SimpleController{
 					this.getPosto().setEstado("Distrito Federal");
 					break;
 				}
-					
+
 				buscarCoordenadas();
-				
+
 				RequestContext context = RequestContext.getCurrentInstance();
 				context.execute("PF('dlMap').show();");
 
@@ -334,52 +359,46 @@ public class MeuPostoBean extends SimpleController{
 		}
 
 	}
-	
-	
-	private void buscarCoordenadas(){
-		
-		
+
+	private void buscarCoordenadas() {
+
 		try {
 			HttpClient httpClient = HttpClients.custom().build();
-			
-			//Buscando coordenadas pelo cep passado
-			HttpUriRequest requestCoordenadas = RequestBuilder.get().setUri("https://maps.googleapis.com/maps/api/geocode/json?address=" + this.cep.replace("-", "")+"+BR&key=AIzaSyBYUVGXHsK1iaTzuDZ5LT1tLBMq4LtV-Hc" )
-					 .setHeader("accept", "application/json")
-					 .build();
-			
+
+			// Buscando coordenadas pelo cep passado
+			HttpUriRequest requestCoordenadas = RequestBuilder.get()
+					.setUri("https://maps.googleapis.com/maps/api/geocode/json?address=" + this.cep.replace("-", "")
+							+ "+BR&key=AIzaSyBYUVGXHsK1iaTzuDZ5LT1tLBMq4LtV-Hc")
+					.setHeader("accept", "application/json").build();
+
 			HttpResponse response;
 			response = httpClient.execute(requestCoordenadas);
 			if (response.getStatusLine().getStatusCode() != 200) {
-				throw new RuntimeException(
-						"Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
+				throw new RuntimeException("Failed : HTTP error code : " + response.getStatusLine().getStatusCode());
 			}
-			
 
 			BufferedReader br = new BufferedReader(new InputStreamReader((response.getEntity().getContent())));
 			String output;
 			String json = "";
 			while ((output = br.readLine()) != null) {
-				json += output + "\n";	
+				json += output + "\n";
 			}
-				
+
 			Gson gson = new Gson();
 			CoordenadasGoogle coordGoogle = gson.fromJson(json, CoordenadasGoogle.class);
-			coordenadas.lat = coordGoogle.getResults().get(0).getGeometry().getLocation().getLat();		
+			coordenadas.lat = coordGoogle.getResults().get(0).getGeometry().getLocation().getLat();
 			coordenadas.lng = coordGoogle.getResults().get(0).getGeometry().getLocation().getLng();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			MsgUtil.updateMessage(FacesMessage.SEVERITY_ERROR, "Erro ao buscar coordenadas do mapa pelo CEP!.", "");
 		}
 
-	
-
 	}
-	
-	
-	public void teste(){
-		System.out.println(latEstabelecimento+ " -- " + lngEstabelecimento);
-		
+
+	public void teste() {
+		System.out.println(latEstabelecimento + " -- " + lngEstabelecimento);
+
 	}
 
 	public Posto getPosto() {
@@ -477,6 +496,5 @@ public class MeuPostoBean extends SimpleController{
 	public void setConfSenha(String confSenha) {
 		this.confSenha = confSenha;
 	}
-	
 
 }

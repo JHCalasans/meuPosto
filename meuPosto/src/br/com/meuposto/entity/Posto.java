@@ -112,6 +112,15 @@ public class Posto extends Entidade{
 
 	@Column(name = "flg_ativo", nullable = false)
 	private boolean ativo;
+	
+	@Column(name = "flg_debito", nullable = false)
+	private boolean debito;
+	
+	@Column(name = "flg_credito", nullable = false)
+	private boolean credito;
+	
+	@Column(name = "flg_dinheiro", nullable = false)
+	private boolean dinheiro;
 
 	@Column(name = "dt_criacao", nullable = false)
 	private Date dataCriacao;
@@ -225,6 +234,30 @@ public class Posto extends Entidade{
 
 	public void setAlcool(Float alcool) {
 		this.alcool = alcool;
+	}
+
+	public boolean isDebito() {
+		return debito;
+	}
+
+	public void setDebito(boolean debito) {
+		this.debito = debito;
+	}
+
+	public boolean isCredito() {
+		return credito;
+	}
+
+	public void setCredito(boolean credito) {
+		this.credito = credito;
+	}
+
+	public boolean isDinheiro() {
+		return dinheiro;
+	}
+
+	public void setDinheiro(boolean dinheiro) {
+		this.dinheiro = dinheiro;
 	}
 
 	public Float getGasolinaAditivada() {

@@ -90,7 +90,7 @@
 		<br />
 		<div align="center">
 			<p:panel id="painelHome"
-				style="width:600px;height:700px;border-color:brown;border-width:3px; border-radius:10px;">
+				style="width:600px;height:730px;border-color:brown;border-width:3px; border-radius:10px;">
 				<h:panelGroup layout="block">
 					<p:outputLabel value="DADOS DO POSTO"
 						style="font-size:30px;font-family:Charbroil;" />
@@ -244,7 +244,42 @@
 
 				<br />
 				<div class="clear"></div>
-				<p:spacer height="50" width="0"></p:spacer>
+				<hr style="border: 1px dashed black;" />
+				<br />
+				<div class="clear"></div>
+				<h:panelGroup layout="block" id="pngPagamentos">
+
+					<p:outputLabel value="Tipos de Pagamento"
+						style="font-size:30px;font-family:Charbroil;" />
+
+				</h:panelGroup>
+				<br />
+				<div class="clear"></div>
+
+				<h:panelGroup layout="block" id="pngCheckPagamentos">
+					<p:outputLabel value="Dinheiro "
+						style="font-size:25px;font-family:Charbroil;margin-right:5px;" />
+					<p:selectBooleanCheckbox style="margin-right:30px;"
+						value="#{meuPostoBean.postoLogado.dinheiro}" styleClass="checkBox">
+					</p:selectBooleanCheckbox>
+
+					<p:outputLabel value="Débito "
+						style="font-size:25px;font-family:Charbroil;margin-right:5px;" />
+					<p:selectBooleanCheckbox value="#{meuPostoBean.postoLogado.debito}"
+						styleClass="checkBox" style="margin-right:30px;">
+					</p:selectBooleanCheckbox>
+
+					<p:outputLabel value="Crédito "
+						style="font-size:25px;font-family:Charbroil;margin-right:5px;" />
+					<p:selectBooleanCheckbox value="#{meuPostoBean.postoLogado.credito}"
+						styleClass="checkBox">
+					</p:selectBooleanCheckbox>
+
+				</h:panelGroup>
+				<br />
+				<div class="clear"></div>
+
+				<p:spacer height="30" width="0"></p:spacer>
 				<h:panelGroup>
 					<p:commandButton value="Salvar"
 						actionListener="#{meuPostoBean.salvarPreco}"
@@ -261,7 +296,7 @@
 
 				<h:panelGroup>
 					<p:commandLink value="Alterar Senha"
-						style="color:blue;text-decoration: underline;" immediate="true"
+						style="color:green;text-decoration: underline;" immediate="true"
 						onclick="PF('dlgSenha').show();"
 						rendered="#{meuPostoBean.postoLogado.ativo == true}">
 					</p:commandLink>
@@ -271,7 +306,7 @@
 
 				<br />
 				<div class="clear"></div>
-				<p:spacer height="70" width="0"></p:spacer>
+				<p:spacer height="30" width="0"></p:spacer>
 
 				<h:panelGroup>
 					<p:commandLink value="Desativar Posto"
@@ -285,21 +320,15 @@
 						onclick="PF('dlgReativar').show();"
 						rendered="#{meuPostoBean.postoLogado.ativo == false}"></p:commandLink>
 
-				</h:panelGroup>
-
-				<br />
-				<div class="clear"></div>
-				<p:spacer height="0" width="480"></p:spacer>
-				<h:panelGroup>
 					<p:commandLink action="#{meuPostoBean.logout}" immediate="true"
-						title="Sair" ajax="true">
+						title="Sair" ajax="true"
+						style="margin-left:224px;margin-right:-250px;">
 						<h:graphicImage url="/resources/sair.png"
 							style="border-style: none" />
 
 					</p:commandLink>
 
 				</h:panelGroup>
-
 
 
 			</p:panel>
